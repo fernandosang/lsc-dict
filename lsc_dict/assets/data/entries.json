@@ -1,0 +1,19 @@
+{
+  "mano": {
+    "video": "senas/grupo1/mano.mp4",    
+    "type": "Sustantivo",
+    "tema": "",
+    "configuracion": "",
+    "lugar": "",
+    "movimiento": "",
+    "definition": "Parte del cuerpo al final del brazo.",
+    "example": {
+      "signs": "DOLOR + MANO",
+      "es": "Me duele la mano."
+    },
+    "variaciones": [],
+    "alternatives": [
+      { "video": "senas/grupo1/mano.mp4", "label": "Forma 2" }
+    ]
+  }
+}
