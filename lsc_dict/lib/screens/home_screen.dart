@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lsc_dict/screens/entry_view_oyentes.dart';
 import 'package:lsc_dict/screens/temas.dart';
@@ -103,47 +103,46 @@ class _HomeScreenState extends State<HomeScreen> {
           child: CompositedTransformFollower(
             link: _layerLink,
             showWhenUnlinked: false,
-            offset: Offset(0, 52),
-            child: CupertinoPopupSurface(
-              isSurfacePainted: true,
+            offset: const Offset(0, 56),
+            child: Material(
+              elevation: 8,
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     for (final s in suggestions) ...[
-                      CupertinoButton(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 12,
-                        ),
-                        alignment: Alignment.centerLeft,
-                        onPressed: () {
+                      InkWell(
+                        onTap: () {
                           searchController.text = s;
                           searchController.selection =
                               TextSelection.fromPosition(
-                                TextPosition(offset: s.length),
-                              );
+                            TextPosition(offset: s.length),
+                          );
                           _removeOverlay();
                           _searchAndOpen(s);
                         },
-                        child: Text(
-                          s,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: CupertinoColors.label,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 12,
+                          ),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              s,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black87,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                       if (s != suggestions.last)
-                        SizedBox(
-                          height: 1,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: CupertinoColors.separator,
-                            ),
-                          ),
-                        ),
+                        const Divider(height: 1, thickness: 1),
                     ],
                   ],
                 ),
@@ -200,15 +199,13 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    // Close overlay + keyboard before navigating
     _removeOverlay();
     FocusScope.of(context).unfocus();
 
-    await Navigator.of(
-      context,
-    ).push(CupertinoPageRoute(builder: (_) => EntryView(id: canonical)));
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => EntryView(id: canonical)),
+    );
 
-    // ✅ When coming back, reset search bar + suggestions
     if (!mounted) return;
     searchController.clear();
     suggestions = [];
@@ -217,15 +214,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showNotFound(String q) {
-    showCupertinoDialog(
+    showDialog(
       context: context,
-      builder: (_) => CupertinoAlertDialog(
-        title: Text('No encontrado'),
+      builder: (_) => AlertDialog(
+        title: const Text('No encontrado'),
         content: Text('No encontré "$q" en el diccionario todavía.'),
         actions: [
-          CupertinoDialogAction(
+          TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -240,147 +237,153 @@ class _HomeScreenState extends State<HomeScreen> {
         _removeOverlay();
       },
       behavior: HitTestBehavior.translucent,
-      child: CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
-          leading: Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Text(
-              'Diccionario LSC',
-              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Diccionario LSC',
+            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
+          ),
+          centerTitle: false,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+        ),
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 240, 244, 252),
+                Color.fromARGB(255, 224, 231, 252),
+              ],
             ),
           ),
-          backgroundColor: CupertinoColors.transparent,
-          automaticBackgroundVisibility: false,
-          border: null,
-        ),
-        child: SizedBox.expand(
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color.fromARGB(255, 240, 244, 252),
-                  Color.fromARGB(255, 224, 231, 252),
-                ],
-              ),
-            ),
-            child: SafeArea(
-              bottom: false, // prevents double-padding weirdness with tab bar
-              child: Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: SingleChildScrollView(
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(30, 0, 30, 20),
-                          child: DailySignCard(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                CupertinoPageRoute(
-                                  builder: (_) => EntryView(id: 'prueba'),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        CompositedTransformTarget(
-                          link: _layerLink,
-                          child: SizedBox(
-                            width: 340,
-                            child: CupertinoTextField(
-                              placeholderStyle: TextStyle(
-                                color: CupertinoColors.systemGrey,
+          child: SafeArea(
+            top: false,
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: SingleChildScrollView(
+                child: Center(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(30, 0, 30, 20),
+                        child: DailySignCard(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const EntryView(id: 'prueba'),
                               ),
-                              controller: searchController,
-                              focusNode: _focusNode,
-                              enabled: !isLoadingAliases,
-                              textInputAction: TextInputAction.search,
-                              onSubmitted: _searchAndOpen,
-                              placeholder: isLoadingAliases
+                            );
+                          },
+                        ),
+                      ),
+                      CompositedTransformTarget(
+                        link: _layerLink,
+                        child: SizedBox(
+                          width: 340,
+                          child: TextField(
+                            controller: searchController,
+                            focusNode: _focusNode,
+                            enabled: !isLoadingAliases,
+                            textInputAction: TextInputAction.search,
+                            onSubmitted: _searchAndOpen,
+                            decoration: InputDecoration(
+                              hintText: isLoadingAliases
                                   ? 'Cargando...'
                                   : 'Buscar seña',
-                              padding: EdgeInsets.symmetric(
+                              hintStyle: const TextStyle(color: Colors.grey),
+                              prefixIcon: const Icon(
+                                Icons.search,
+                                size: 20,
+                                color: Colors.grey,
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 12,
                                 vertical: 12,
                               ),
-                              prefix: Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Icon(
-                                  CupertinoIcons.search,
-                                  size: 20,
-                                  color: CupertinoColors.systemGrey,
-                                ),
-                              ),
-                              decoration: BoxDecoration(
-                                color: CupertinoColors.white,
+                              border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(22),
-                                border: Border.all(
-                                  color: CupertinoColors.systemGrey4,
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFBDBDBD),
                                   width: 0.8,
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(20, 30, 0, 10),
-                            child: Text(
-                              'Explorar señas',
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w800,
-                                color: CupertinoColors.darkBackgroundGray,
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(22),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFBDBDBD),
+                                  width: 0.8,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(22),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFF9E9E9E),
+                                  width: 1.0,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: GridView.count(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 0,
-                            crossAxisSpacing: 16,
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            children: [
-                              NavCard(
-                                title: 'Configuración manual',
-                                assetPath: 'assets/images/hand_config.png',
-                                onTap: () {},
-                              ),
-
-                              NavCard(
-                                title: 'Lugar de la seña',
-                                assetPath: 'assets/images/hand_place.png',
-                                onTap: () {},
-                              ),
-
-                              NavCard(
-                                title: 'Movimiento',
-                                assetPath: 'assets/images/hand_move.png',
-                                onTap: () {},
-                              ),
-
-                              NavCard(
-                                title: 'Temas',
-                                assetPath: 'assets/images/categories.png',
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    CupertinoPageRoute(
-                                      builder: (_) => const TemasScreen(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 30, 0, 10),
+                          child: Text(
+                            'Explorar señas',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.grey.shade900,
+                            ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: GridView.count(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 0,
+                          crossAxisSpacing: 16,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: [
+                            NavCard(
+                              title: 'Configuración manual',
+                              assetPath: 'assets/images/hand_config.png',
+                              onTap: () {},
+                            ),
+                            NavCard(
+                              title: 'Lugar de la seña',
+                              assetPath: 'assets/images/hand_place.png',
+                              onTap: () {},
+                            ),
+                            NavCard(
+                              title: 'Movimiento',
+                              assetPath: 'assets/images/hand_move.png',
+                              onTap: () {},
+                            ),
+                            NavCard(
+                              title: 'Temas',
+                              assetPath: 'assets/images/categories.png',
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const TemasScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

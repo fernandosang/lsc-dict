@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
@@ -24,7 +24,7 @@ class _FullscreenVideoState extends State<FullscreenVideo> {
   void initState() {
     super.initState();
 
-    // optional: hide system UI for real fullscreen
+    // Hide system UI for fullscreen experience
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
     _c = VideoPlayerController.networkUrl(widget.videoUri);
@@ -33,6 +33,7 @@ class _FullscreenVideoState extends State<FullscreenVideo> {
       setState(() {});
       _c.play();
     });
+
     _c.setLooping(true);
   }
 
@@ -52,17 +53,18 @@ class _FullscreenVideoState extends State<FullscreenVideo> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      backgroundColor: CupertinoColors.black,
-      child: Stack(
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
         children: [
           Center(
             child: FutureBuilder(
               future: _init,
               builder: (_, snap) {
                 if (snap.connectionState != ConnectionState.done) {
-                  return const CupertinoActivityIndicator();
+                  return const CircularProgressIndicator(color: Colors.white);
                 }
+
                 return GestureDetector(
                   onTap: _toggle,
                   child: AspectRatio(
@@ -76,16 +78,15 @@ class _FullscreenVideoState extends State<FullscreenVideo> {
 
           // Close button
           SafeArea(
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: CupertinoButton(
-                padding: const EdgeInsets.all(14),
+            child: Container(
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.black45,
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Icon(
-                  CupertinoIcons.xmark_circle_fill,
-                  color: CupertinoColors.white,
-                  size: 30,
-                ),
+                icon: const Icon(Icons.close, color: Colors.white, size: 24),
               ),
             ),
           ),

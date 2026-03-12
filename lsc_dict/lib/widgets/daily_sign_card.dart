@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class DailySignCard extends StatelessWidget {
   final VoidCallback? onTap;
@@ -7,67 +7,71 @@ class DailySignCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        constraints: BoxConstraints(minHeight: 200),
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: CupertinoColors.white,
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(
-            color:  Color(0x22000000),
-            width: 0.7,
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(22),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: onTap,
+        child: Container(
+          width: double.infinity,
+          constraints: const BoxConstraints(minHeight: 200),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: const Color(0x22000000),
+              width: 0.7,
+            ),
           ),
-        ),
-        child: Row(
-          children: [
-            // Imagen
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Image.asset(
-                'assets/images/logo.png',
-                width: 70,
-                height: 70,
-                fit: BoxFit.cover,
+          child: Row(
+            children: [
+              /// IMAGE
+              ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  width: 70,
+                  height: 70,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
 
-            SizedBox(width: 16),
+              const SizedBox(width: 16),
 
-            // Texto
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'La seña del día',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: CupertinoColors.systemGrey,
-                      fontWeight: FontWeight.w600,
+              /// TEXT
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      'La seña del día',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 6),
-                  Text(
-                    'Próximamente',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: CupertinoColors.label,
+                    SizedBox(height: 6),
+                    Text(
+                      'Próximamente',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black87,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
 
-            Icon(
-              CupertinoIcons.chevron_right,
-              size: 18,
-              color: CupertinoColors.systemGrey2,
-            ),
-          ],
+              const Icon(
+                Icons.chevron_right,
+                size: 18,
+                color: Colors.grey,
+              ),
+            ],
+          ),
         ),
       ),
     );

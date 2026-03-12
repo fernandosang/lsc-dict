@@ -1,17 +1,26 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class EspanolParaSordosScreen extends StatelessWidget {
   const EspanolParaSordosScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: Text('Español para sordos'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Español para sordos'),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
       ),
-      child: SafeArea(
+      body: SafeArea(
         child: Center(
-          child: Text('Próximamente'),
+          child: Text(
+            'Próximamente',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
       ),
     );
